@@ -14,9 +14,9 @@ const navLinks = [
 ]
 
 export default function Navbar() {
-  const pathname              = usePathname()
-  const router                = useRouter()
-  const [user,      setUser]  = useState<UserType | null>(null)
+  const pathname         = usePathname()
+  const router           = useRouter()
+  const [user,      setUser]       = useState<UserType | null>(null)
   const [theme,     setThemeState] = useState<Theme>('dark')
   const [showAuth,  setShowAuth]   = useState(false)
   const [menuOpen,  setMenuOpen]   = useState(false)
@@ -26,16 +26,11 @@ export default function Navbar() {
     setThemeState(getTheme())
   }, [])
 
-  function handleToggleTheme() {
-    const next = toggleTheme()
-    setThemeState(next)
-  }
+  /* Close drawer on route change */
+  useEffect(() => { setMenuOpen(false) }, [pathname])
 
-  function handleSignOut() {
-    signOut()
-    setUser(null)
-    router.push('/')
-  }
+  function handleToggleTheme() { setThemeState(toggleTheme()) }
+  function handleSignOut()     { signOut(); setUser(null); router.push('/') }
 
   const isDark = theme === 'dark'
 
@@ -48,6 +43,7 @@ export default function Navbar() {
         />
       )}
 
+      {/* ── Nav bar ── */}
       <nav
         style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
@@ -59,59 +55,20 @@ export default function Navbar() {
           transition: 'background 0.2s ease, border-color 0.2s ease',
         }}
       >
-        <div
-          style={{
-            maxWidth: 1100,
-            margin: '0 auto',
-            padding: '0 24px',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: 16,
-          }}
-        >
-          {/* ── Logo ── */}
-          <Link
-            href="/"
-            style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              textDecoration: 'none', flexShrink: 0,
-            }}
-          >
-            <div
-              style={{
-                width: 28, height: 28, borderRadius: 7,
-                background: 'var(--orange)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 14, fontWeight: 900, color: '#000',
-                boxShadow: '0 2px 8px var(--orange-bg)',
-              }}
-            >
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 16px', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+
+          {/* Logo */}
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', flexShrink: 0 }}>
+            <div style={{ width: 28, height: 28, borderRadius: 7, background: 'var(--orange)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 900, color: '#000' }}>
               ₿
             </div>
-            <span
-              style={{
-                fontWeight: 800, fontSize: 13,
-                color: 'var(--text)',
-                letterSpacing: '-0.02em',
-              }}
-            >
-              BRA
-              <span
-                className="hide-xs"
-                style={{ fontWeight: 400, color: 'var(--text-3)', marginLeft: 4 }}
-              >
-                · Bitcoin Research
-              </span>
+            <span style={{ fontWeight: 800, fontSize: 13, color: 'var(--text)', letterSpacing: '-0.02em' }}>
+              BRA<span id="nav-subtitle" style={{ fontWeight: 400, color: 'var(--text-3)', marginLeft: 4 }}>· Bitcoin Research</span>
             </span>
           </Link>
 
-          {/* ── Desktop nav links ── */}
-          <div
-            className="hide-mobile"
-            style={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1, justifyContent: 'center' }}
-          >
+          {/* Desktop nav links — hidden below 640px */}
+          <div id="nav-desktop-links" style={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1, justifyContent: 'center' }}>
             {navLinks.map(({ href, label }) => {
               const active = pathname === href || pathname.startsWith(href + '/')
               return (
@@ -119,15 +76,11 @@ export default function Navbar() {
                   key={href}
                   href={href}
                   style={{
-                    padding: '5px 14px',
-                    borderRadius: 7,
-                    fontSize: 13,
-                    fontWeight: active ? 600 : 500,
-                    textDecoration: 'none',
-                    color: active ? 'var(--text)' : 'var(--text-2)',
+                    padding: '6px 14px', borderRadius: 7, fontSize: 13, fontWeight: active ? 600 : 500,
+                    textDecoration: 'none', color: active ? 'var(--text)' : 'var(--text-2)',
                     background: active ? 'var(--bg-elevated)' : 'transparent',
                     border: `1px solid ${active ? 'var(--border)' : 'transparent'}`,
-                    transition: 'all 0.15s',
+                    transition: 'all 0.15s', whiteSpace: 'nowrap',
                   }}
                   onMouseEnter={(e) => { if (!active) e.currentTarget.style.color = 'var(--text)' }}
                   onMouseLeave={(e) => { if (!active) e.currentTarget.style.color = 'var(--text-2)' }}
@@ -138,7 +91,7 @@ export default function Navbar() {
             })}
           </div>
 
-          {/* ── Right side controls ── */}
+          {/* Right controls */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
 
             {/* Theme toggle */}
@@ -148,119 +101,55 @@ export default function Navbar() {
               title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
               aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
             >
-              {isDark
-                ? <Sun size={15} strokeWidth={1.8} />
-                : <Moon size={15} strokeWidth={1.8} />
-              }
+              {isDark ? <Sun size={15} strokeWidth={1.8} /> : <Moon size={15} strokeWidth={1.8} />}
             </button>
 
+            {/* Auth — desktop only */}
             {user ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <div
-                  className="hide-mobile"
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: 6,
-                    padding: '5px 12px',
-                    border: '1px solid var(--border)',
-                    borderRadius: 7,
-                    background: 'var(--bg-elevated)',
-                  }}
-                >
-                  {user.authType === 'wallet'
-                    ? <Wallet size={12} color="var(--orange)" />
-                    : <User size={12} color="var(--orange)" />
-                  }
-                  <span
-                    style={{
-                      fontSize: 12, fontWeight: 600,
-                      color: 'var(--text-2)',
-                      maxWidth: 100,
-                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {user.username}
-                  </span>
+              <div id="nav-user" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 10px', border: '1px solid var(--border)', borderRadius: 7, background: 'var(--bg-elevated)' }}>
+                  {user.authType === 'wallet' ? <Wallet size={11} color="var(--orange)" /> : <User size={11} color="var(--orange)" />}
+                  <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-2)', maxWidth: 80, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.username}</span>
                 </div>
                 <button
                   onClick={handleSignOut}
                   title="Sign out"
-                  style={{
-                    background: 'transparent',
-                    border: '1px solid var(--border)',
-                    borderRadius: 7,
-                    padding: '5px 8px',
-                    cursor: 'pointer',
-                    display: 'flex', alignItems: 'center',
-                    color: 'var(--text-2)',
-                    transition: 'color 0.15s, border-color 0.15s',
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text)'; e.currentTarget.style.borderColor = 'var(--border-md)' }}
-                  onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-2)'; e.currentTarget.style.borderColor = 'var(--border)' }}
+                  style={{ background: 'transparent', border: '1px solid var(--border)', borderRadius: 7, padding: '6px 8px', cursor: 'pointer', display: 'flex', alignItems: 'center', color: 'var(--text-2)', minWidth: 44, minHeight: 44, justifyContent: 'center' }}
                 >
                   <LogOut size={14} strokeWidth={1.8} />
                 </button>
               </div>
             ) : (
-              <div style={{ display: 'flex', gap: 6 }}>
+              <div id="nav-auth" style={{ display: 'flex', gap: 6 }}>
                 <button
                   onClick={() => setShowAuth(true)}
-                  style={{
-                    padding: '6px 14px',
-                    borderRadius: 7,
-                    border: '1px solid var(--border)',
-                    background: 'transparent',
-                    color: 'var(--text-2)',
-                    fontSize: 13, fontWeight: 600,
-                    cursor: 'pointer',
-                    transition: 'color 0.15s, border-color 0.15s',
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text)'; e.currentTarget.style.borderColor = 'var(--border-md)' }}
-                  onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-2)'; e.currentTarget.style.borderColor = 'var(--border)' }}
+                  style={{ padding: '6px 12px', borderRadius: 7, border: '1px solid var(--border)', background: 'transparent', color: 'var(--text-2)', fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44 }}
                 >
                   Sign In
                 </button>
                 <button
                   onClick={() => setShowAuth(true)}
-                  style={{
-                    padding: '6px 14px',
-                    borderRadius: 7,
-                    border: 'none',
-                    background: 'var(--orange)',
-                    color: '#000',
-                    fontSize: 13, fontWeight: 700,
-                    cursor: 'pointer',
-                    transition: 'opacity 0.15s',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.88')}
-                  onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+                  style={{ padding: '6px 12px', borderRadius: 7, border: 'none', background: 'var(--orange)', color: '#000', fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44 }}
                 >
-                  Connect Wallet
+                  Connect
                 </button>
               </div>
             )}
 
-            {/* Mobile hamburger */}
+            {/* Hamburger — visible below 640px */}
             <button
-              id="mobile-menu-btn"
+              id="hamburger-btn"
               onClick={() => setMenuOpen((o) => !o)}
-              style={{
-                display: 'none',
-                background: 'transparent',
-                border: '1px solid var(--border)',
-                borderRadius: 7,
-                padding: '5px 8px',
-                cursor: 'pointer',
-                color: 'var(--text-2)',
-                alignItems: 'center',
-              }}
               aria-label="Toggle menu"
+              aria-expanded={menuOpen}
+              style={{ background: 'transparent', border: '1px solid var(--border)', borderRadius: 7, padding: '6px 8px', cursor: 'pointer', display: 'none', alignItems: 'center', justifyContent: 'center', color: 'var(--text-2)', minWidth: 44, minHeight: 44 }}
             >
-              {menuOpen ? <X size={16} /> : <Menu size={16} />}
+              {menuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
         </div>
 
-        {/* ── Mobile dropdown ── */}
+        {/* ── Mobile drawer ── */}
         {menuOpen && (
           <div
             style={{
@@ -268,33 +157,56 @@ export default function Navbar() {
               background: 'var(--bg-card)',
               borderBottom: '1px solid var(--border)',
               padding: '8px 16px 16px',
+              boxShadow: 'var(--shadow-md)',
             }}
           >
-            {navLinks.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                onClick={() => setMenuOpen(false)}
-                style={{
-                  display: 'block',
-                  padding: '12px 8px',
-                  fontSize: 15, fontWeight: 600,
-                  color: 'var(--text)',
-                  textDecoration: 'none',
-                  borderBottom: '1px solid var(--border)',
-                }}
-              >
-                {label}
-              </Link>
-            ))}
+            {navLinks.map(({ href, label }) => {
+              const active = pathname === href || pathname.startsWith(href + '/')
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setMenuOpen(false)}
+                  style={{ display: 'flex', alignItems: 'center', padding: '14px 8px', fontSize: 16, fontWeight: 600, color: active ? 'var(--orange)' : 'var(--text)', textDecoration: 'none', borderBottom: '1px solid var(--border)' }}
+                >
+                  {label}
+                </Link>
+              )
+            })}
+
+            {/* Auth buttons in drawer */}
+            {!user && (
+              <div style={{ display: 'flex', gap: 8, paddingTop: 14 }}>
+                <button
+                  onClick={() => { setShowAuth(true); setMenuOpen(false) }}
+                  style={{ flex: 1, padding: '12px', borderRadius: 8, border: '1px solid var(--border)', background: 'transparent', color: 'var(--text)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => { setShowAuth(true); setMenuOpen(false) }}
+                  style={{ flex: 1, padding: '12px', borderRadius: 8, border: 'none', background: 'var(--orange)', color: '#000', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}
+                >
+                  Connect Wallet
+                </button>
+              </div>
+            )}
           </div>
         )}
       </nav>
 
       <style>{`
-        @media (max-width: 640px) {
-          #mobile-menu-btn { display: flex !important; }
-          .hide-mobile { display: none !important; }
+        /* Mobile: show hamburger, hide desktop links/auth */
+        @media (max-width: 639px) {
+          #hamburger-btn        { display: flex !important; }
+          #nav-desktop-links    { display: none !important; }
+          #nav-auth             { display: none !important; }
+          #nav-user             { display: none !important; }
+          #nav-subtitle         { display: none !important; }
+        }
+        /* Tablet+: hide hamburger */
+        @media (min-width: 640px) {
+          #hamburger-btn { display: none !important; }
         }
       `}</style>
     </>

@@ -102,7 +102,7 @@ export default function ModulePage() {
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
       <Navbar />
 
-      <div style={{ maxWidth: 860, margin: '0 auto', padding: 'clamp(80px,10vw,96px) 24px 80px' }}>
+      <div style={{ maxWidth: 860, margin: '0 auto', padding: 'clamp(80px,10vw,96px) 16px 80px' }}>
 
         {/* Back */}
         <Link

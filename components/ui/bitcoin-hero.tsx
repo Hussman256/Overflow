@@ -1,27 +1,13 @@
 'use client'
 
-import { motion, useInView } from "framer-motion"
-import { ArrowRight } from "lucide-react"
-import { useRef } from "react"
-import Link from "next/link"
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
+import { motion } from 'framer-motion'
 
-/* ── Bitcoin circular mark ── */
-export const BitcoinMark = ({ size = 24, glow = false }: { size?: number; glow?: boolean }) => (
+/* ── Bitcoin SVG mark (white on orange) ── */
+export const BitcoinMark = ({ size = 24 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 100 100" fill="none" aria-hidden="true">
-    <defs>
-      <linearGradient id="btc-grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stopColor="#FFA840" />
-        <stop offset="55%" stopColor="#F7931A" />
-        <stop offset="100%" stopColor="#D97010" />
-      </linearGradient>
-      {glow && (
-        <filter id="btc-glow">
-          <feGaussianBlur stdDeviation="3" result="blur" />
-          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
-      )}
-    </defs>
-    <circle cx="50" cy="50" r="50" fill="url(#btc-grad)" filter={glow ? "url(#btc-glow)" : undefined} />
+    <circle cx="50" cy="50" r="50" fill="#F7931A" />
     <path
       fill="white"
       d="M67 42.5c.8-5.5-3.3-8.5-9-10.4l1.8-7.3-4.5-1.1-1.8 7.1c-1.2-.3-2.4-.6-3.6-.8l1.8-7.2-4.5-1.1-1.8 7.3c-1-.2-2-.4-3-.7l-6.6-1.7-1.3 4.8s3.3.8 3.3.7c1.8.5 2.1 1.7 2.1 2.7L34.4 66c-.3 1.2-1.3 2.4-3.4 1.9l.1.1-3.3-.8-2.2 5.2 6.2 1.5 3.4.9-1.9 7.4 4.5 1.1 1.9-7.4c1.3.4 2.5.7 3.7 1l-1.9 7.3 4.5 1.1 1.9-7.4c7.6 1.4 13.3.9 15.7-6 1.9-5.5-.1-8.7-4.1-10.7 2.9-1.1 5-3 5.5-7.7zm-9.8 13.8c-1.4 5.5-10.6 2.5-13.6 1.8l2.4-9.7c3 .7 12.7 2.1 11.2 7.9zm1.4-13.9c-1.2 5-9 2.5-11.5 1.9l2.2-8.7c2.5.6 10.6 1.8 9.3 6.8z"
@@ -29,219 +15,332 @@ export const BitcoinMark = ({ size = 24, glow = false }: { size?: number; glow?:
   </svg>
 )
 
-/* ── WordsPullUp ── */
-interface WordsPullUpProps {
-  text: string
-  className?: string
-  style?: React.CSSProperties
-}
+/* ── White bitcoin mark (for dark circle) ── */
+const BitcoinMarkWhite = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 100 100" fill="none" aria-hidden="true">
+    <circle cx="50" cy="50" r="50" fill="white" />
+    <path
+      fill="#F7931A"
+      d="M67 42.5c.8-5.5-3.3-8.5-9-10.4l1.8-7.3-4.5-1.1-1.8 7.1c-1.2-.3-2.4-.6-3.6-.8l1.8-7.2-4.5-1.1-1.8 7.3c-1-.2-2-.4-3-.7l-6.6-1.7-1.3 4.8s3.3.8 3.3.7c1.8.5 2.1 1.7 2.1 2.7L34.4 66c-.3 1.2-1.3 2.4-3.4 1.9l.1.1-3.3-.8-2.2 5.2 6.2 1.5 3.4.9-1.9 7.4 4.5 1.1 1.9-7.4c1.3.4 2.5.7 3.7 1l-1.9 7.3 4.5 1.1 1.9-7.4c7.6 1.4 13.3.9 15.7-6 1.9-5.5-.1-8.7-4.1-10.7 2.9-1.1 5-3 5.5-7.7zm-9.8 13.8c-1.4 5.5-10.6 2.5-13.6 1.8l2.4-9.7c3 .7 12.7 2.1 11.2 7.9zm1.4-13.9c-1.2 5-9 2.5-11.5 1.9l2.2-8.7c2.5.6 10.6 1.8 9.3 6.8z"
+    />
+  </svg>
+)
 
-export const WordsPullUp = ({ text, className = "", style }: WordsPullUpProps) => {
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true })
-  const words = text.split(" ")
-
-  return (
-    <div ref={ref} className={`inline-flex flex-wrap ${className}`} style={style}>
-      {words.map((word, i) => (
-        <motion.span
-          key={i}
-          initial={{ y: 40, opacity: 0 }}
-          animate={isInView ? { y: 0, opacity: 1 } : {}}
-          transition={{ duration: 0.8, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
-          className="inline-block"
-          style={{ marginRight: i < words.length - 1 ? "0.25em" : 0 }}
-        >
-          {word}
-        </motion.span>
-      ))}
-    </div>
-  )
-}
-
-/* ── Nav items ── */
-const navLinks = [
-  { label: "Curriculum", href: "/curriculum" },
-  { label: "Resources",  href: "/resources"  },
-  { label: "About",      href: "#about"       },
+const photos = [
+  {
+    src: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80',
+    alt: 'Bitcoin student',
+    borderRadius: '60% 40% 55% 45% / 45% 60% 40% 55%',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80',
+    alt: 'Bitcoin student',
+    borderRadius: '45% 55% 40% 60% / 60% 45% 55% 40%',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1531891437562-4301cf35b7e4?auto=format&fit=crop&w=300&h=300&q=80',
+    alt: 'Bitcoin student',
+    borderRadius: '55% 45% 60% 40% / 40% 55% 45% 60%',
+  },
 ]
 
-/* ── Network stats (floating card) ── */
-const networkStats = [
-  { label: "Hard Cap",   value: "21,000,000" },
-  { label: "Block Time", value: "~10 min"    },
-  { label: "Uptime",     value: "99.98%"     },
-  { label: "Genesis",    value: "Jan 3 2009" },
-]
-
-/* ── BitcoinHero ── */
 const BitcoinHero = () => {
   return (
-    <section style={{ height: '100svh', minHeight: 500, width: '100%' }}>
-      <div style={{ position: 'relative', height: '100%', width: '100%', overflow: 'hidden', borderRadius: 'clamp(12px, 2vw, 32px)' }}>
+    <>
+      <style>{`
+        .hero-layout {
+          display: flex;
+          flex-direction: column;
+          gap: 32px;
+          padding: 36px 20px 44px;
+        }
+        .hero-photos-mobile {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+        }
+        .hero-photos-desktop { display: none; }
+        .hero-cta-row {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+        .hero-topbar-links { display: none; }
 
-        {/* Background image */}
-        <img
-          src="https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=1920&q=80"
-          alt=""
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-        />
+        @media (min-width: 640px) {
+          .hero-topbar-links { display: flex; }
+          .hero-cta-row { flex-direction: row; align-items: center; }
+        }
 
-        {/* Overlays */}
-        <div style={{ pointerEvents: 'none', position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.6)' }} />
-        <div className="noise-overlay" style={{ pointerEvents: 'none', position: 'absolute', inset: 0, opacity: 0.5, mixBlendMode: 'overlay' }} />
-        <div style={{ pointerEvents: 'none', position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, transparent 40%, rgba(0,0,0,0.8) 100%)' }} />
+        @media (min-width: 900px) {
+          .hero-layout {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: 56px 48px 64px;
+            gap: 48px;
+          }
+          .hero-photos-mobile { display: none; }
+          .hero-photos-desktop {
+            display: block;
+            position: relative;
+            width: 340px;
+            height: 340px;
+            flex-shrink: 0;
+          }
+        }
 
-        {/* Centered top nav */}
-        <nav style={{ position: 'absolute', left: '50%', top: 0, zIndex: 20, transform: 'translateX(-50%)', width: 'max-content', maxWidth: 'calc(100vw - 32px)' }}>
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 'clamp(16px, 3vw, 40px)',
-            borderRadius: '0 0 20px 20px',
-            background: 'rgba(10,10,10,0.88)',
-            padding: 'clamp(8px,1.5vw,12px) clamp(14px,3vw,32px)',
-            border: '1px solid rgba(255,255,255,0.08)', borderTop: 'none',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            flexWrap: 'nowrap',
-          }}>
-            {/* Logo */}
-            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', flexShrink: 0 }}>
-              <BitcoinMark size={26} />
-              <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(225,224,204,0.65)', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>BRA</span>
-            </Link>
+        @media (min-width: 1200px) {
+          .hero-layout { padding: 64px 72px 80px; }
+          .hero-photos-desktop { width: 400px; height: 400px; }
+        }
+      `}</style>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(12px, 2.5vw, 32px)' }}>
-              {navLinks.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  style={{ fontSize: 13, color: 'rgba(225,224,204,0.6)', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'color 0.15s' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = '#E1E0CC')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'rgba(225,224,204,0.6)')}
-                >
-                  {item.label}
-                </Link>
-              ))}
+      <section style={{ background: '#F7931A', minHeight: '100svh', display: 'flex', flexDirection: 'column' }}>
+
+        {/* ── Top bar ── */}
+        <div style={{ background: '#0A0A0A', padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+
+          {/* Logo */}
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+            <div style={{ width: 34, height: 34, borderRadius: '50%', border: '2px solid rgba(247,147,26,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
+              <BitcoinMark size={30} />
             </div>
-
-            <Link
-              href="/curriculum"
-              style={{
-                flexShrink: 0, borderRadius: 99,
-                padding: '6px 16px',
-                background: '#F7931A', color: '#000',
-                fontSize: 12, fontWeight: 700,
-                textDecoration: 'none', whiteSpace: 'nowrap',
-                transition: 'opacity 0.15s',
-              }}
-              onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
-              onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
-            >
-              Get Started
-            </Link>
-          </div>
-        </nav>
-
-        {/* Floating network stats — desktop only */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.9, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          style={{
-            position: 'absolute', top: '50%', right: 'clamp(24px, 4vw, 56px)',
-            transform: 'translateY(-50%)',
-            background: 'rgba(8,8,8,0.82)',
-            border: '1px solid rgba(255,255,255,0.07)',
-            borderRadius: 14,
-            padding: '18px 22px',
-            minWidth: 200,
-            backdropFilter: 'blur(16px)',
-            zIndex: 10,
-            display: 'none',
-          }}
-          className="hero-stats-card"
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 14 }}>
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22C55E', boxShadow: '0 0 6px #22C55E' }} />
-            <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase' }}>Bitcoin Network</span>
-          </div>
-          {networkStats.map((s, i) => (
-            <div key={s.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '7px 0', borderBottom: i < networkStats.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}>
-              <span style={{ fontSize: 11, color: 'rgba(225,224,204,0.38)' }}>{s.label}</span>
-              <span style={{ fontSize: 12, fontWeight: 700, color: '#E1E0CC', fontFamily: 'ui-monospace, monospace' }}>{s.value}</span>
+            <div style={{ lineHeight: 1.1 }}>
+              <span style={{ color: '#fff', fontWeight: 800, fontSize: 14 }}>Bitcoin Research</span>
+              <span style={{ color: '#F7931A', fontWeight: 500, fontSize: 14 }}> Bootcamp</span>
             </div>
-          ))}
-        </motion.div>
+          </Link>
 
-        {/* Hero content — bottom */}
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 'clamp(16px, 4vw, 48px) clamp(16px, 4vw, 48px) clamp(12px, 2vw, 24px)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 8, alignItems: 'end' }}>
-
-            {/* Large title */}
-            <h1
-              style={{
-                fontWeight: 900,
-                lineHeight: 0.85,
-                letterSpacing: '-0.05em',
-                color: '#E1E0CC',
-                fontSize: 'clamp(72px, 22vw, 260px)',
-                margin: 0,
-              }}
-            >
-              <WordsPullUp text="Bitcoin" />
-            </h1>
-
-            {/* Description row */}
-            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', paddingBottom: 4 }}>
-
-              <motion.div
-                initial={{ y: 16, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.7, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                style={{ maxWidth: 380 }}
+          {/* Desktop nav links */}
+          <div className="hero-topbar-links" style={{ alignItems: 'center', gap: 28 }}>
+            {['Curriculum', 'Resources'].map((label) => (
+              <Link
+                key={label}
+                href={`/${label.toLowerCase()}`}
+                style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13, fontWeight: 600, textDecoration: 'none', transition: 'color 0.15s' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.55)')}
               >
-                <p style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#F7931A', marginBottom: 8 }}>
-                  Research Academy
-                </p>
-                <p style={{ fontSize: 'clamp(12px, 1.5vw, 15px)', lineHeight: 1.55, color: 'rgba(225,224,204,0.65)', margin: 0 }}>
-                  A free, open curriculum for anyone who wants to find, evaluate, and publish Bitcoin research.
-                </p>
-              </motion.div>
+                {label}
+              </Link>
+            ))}
+          </div>
 
-              <motion.div
-                initial={{ y: 16, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.7, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                style={{ flexShrink: 0 }}
-              >
-                <Link
-                  href="/curriculum"
-                  style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 0,
-                    borderRadius: 99, overflow: 'hidden',
-                    background: '#E1E0CC', textDecoration: 'none',
-                  }}
-                >
-                  <span style={{ fontSize: 13, fontWeight: 700, color: '#0C0C0C', padding: '0 16px 0 20px', lineHeight: '40px', whiteSpace: 'nowrap' }}>
-                    Start Learning
-                  </span>
-                  <span style={{ width: 40, height: 40, borderRadius: '50%', background: '#0C0C0C', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <ArrowRight size={15} color="#E1E0CC" />
-                  </span>
-                </Link>
-              </motion.div>
-
-            </div>
+          {/* Circular badge */}
+          <div style={{ width: 62, height: 62, borderRadius: '50%', border: '1.5px solid rgba(255,255,255,0.55)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 6, gap: 2, flexShrink: 0 }}>
+            <BitcoinMark size={16} />
+            <span style={{ color: 'white', fontSize: 6.5, fontWeight: 700, lineHeight: 1.3, letterSpacing: '0.02em', textTransform: 'lowercase' }}>bitcoin research bootcamp</span>
           </div>
         </div>
 
-      </div>
+        {/* ── Main orange content ── */}
+        <div className="hero-layout" style={{ flex: 1 }}>
 
-      {/* Show stats card only on large screens */}
-      <style>{`
-        @media (min-width: 1024px) { .hero-stats-card { display: block !important; } }
-      `}</style>
-    </section>
+          {/* ── Left: text ── */}
+          <div style={{ flex: 1, minWidth: 0 }}>
+
+            {/* "Learn" + "With" diamond */}
+            <div style={{ position: 'relative', marginBottom: 8 }}>
+              <motion.p
+                initial={{ opacity: 0, x: -16 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                style={{ color: 'rgba(255,255,255,0.88)', fontSize: 'clamp(18px, 4vw, 26px)', fontWeight: 500, margin: 0, lineHeight: 1 }}
+              >
+                Learn
+              </motion.p>
+
+              {/* "With" rotated diamond */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.7, rotate: 35 }}
+                animate={{ opacity: 1, scale: 1, rotate: 45 }}
+                transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                style={{
+                  position: 'absolute',
+                  top: -8, right: 0,
+                  width: 54, height: 54,
+                  background: '#111111',
+                  borderRadius: 6,
+                  transform: 'rotate(45deg)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+                }}
+              >
+                <span style={{ color: 'white', fontSize: 12, fontWeight: 800, transform: 'rotate(-45deg)', letterSpacing: '-0.01em' }}>With</span>
+              </motion.div>
+            </div>
+
+            {/* BITCOIN RESEARCH headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                color: 'white',
+                fontSize: 'clamp(52px, 14vw, 108px)',
+                fontWeight: 900,
+                lineHeight: 0.87,
+                letterSpacing: '-0.04em',
+                textTransform: 'uppercase',
+                margin: '0 0 28px',
+              }}
+            >
+              BITCOIN<br />RESEARCH
+            </motion.h1>
+
+            {/* Mobile photos — between headline and CTA */}
+            <div className="hero-photos-mobile" style={{ marginBottom: 28 }}>
+              {photos.map((p, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0.85 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.55, delay: 0.3 + i * 0.08 }}
+                  style={{
+                    width: 80, height: 80,
+                    borderRadius: p.borderRadius,
+                    border: '3px solid white',
+                    overflow: 'hidden',
+                    flexShrink: 0,
+                    boxShadow: '0 4px 14px rgba(0,0,0,0.25)',
+                  }}
+                >
+                  <img src={p.src} alt={p.alt} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Free Access + subtitle */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              style={{ marginBottom: 28 }}
+            >
+              <p style={{ color: 'white', fontSize: 'clamp(24px, 6vw, 36px)', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 8 }}>
+                Free Access
+              </p>
+              <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 'clamp(13px, 3vw, 16px)', lineHeight: 1.55, margin: 0, maxWidth: 420 }}>
+                Join <strong style={{ color: 'white' }}>BRA</strong> and start learning Bitcoin research today — no technical background required.
+              </p>
+            </motion.div>
+
+            {/* CTA row */}
+            <motion.div
+              className="hero-cta-row"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <Link
+                href="/curriculum"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 10,
+                  background: '#111111', color: 'white',
+                  padding: '14px 26px',
+                  borderRadius: 99,
+                  fontWeight: 800, fontSize: 15,
+                  textDecoration: 'none',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.35)',
+                  transition: 'transform 0.15s, box-shadow 0.15s',
+                  width: 'fit-content',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.03)'; e.currentTarget.style.boxShadow = '0 6px 28px rgba(0,0,0,0.4)' }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.35)' }}
+              >
+                Start Learning Free <ArrowRight size={16} />
+              </Link>
+
+              <Link
+                href="/curriculum"
+                style={{ color: 'white', fontSize: 14, fontWeight: 600, textDecoration: 'none', opacity: 0.75, width: 'fit-content' }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.75')}
+              >
+                View curriculum →
+              </Link>
+            </motion.div>
+          </div>
+
+          {/* ── Desktop photo cluster ── */}
+          <div className="hero-photos-desktop">
+
+            {/* Photo 1 — top left */}
+            <motion.div
+              initial={{ opacity: 0, y: -20, x: -20 }}
+              animate={{ opacity: 1, y: 0, x: 0 }}
+              transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                position: 'absolute', top: 0, left: 0,
+                width: 160, height: 160,
+                borderRadius: photos[0].borderRadius,
+                border: '4px solid white',
+                overflow: 'hidden',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+              }}
+            >
+              <img src={photos[0].src} alt={photos[0].alt} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </motion.div>
+
+            {/* Photo 2 — top right */}
+            <motion.div
+              initial={{ opacity: 0, y: -20, x: 20 }}
+              animate={{ opacity: 1, y: 0, x: 0 }}
+              transition={{ duration: 0.7, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                position: 'absolute', top: 0, right: 0,
+                width: 145, height: 145,
+                borderRadius: photos[1].borderRadius,
+                border: '4px solid white',
+                overflow: 'hidden',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+              }}
+            >
+              <img src={photos[1].src} alt={photos[1].alt} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </motion.div>
+
+            {/* Photo 3 — bottom center */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                position: 'absolute', bottom: 0, left: '50%',
+                transform: 'translateX(-50%)',
+                width: 155, height: 155,
+                borderRadius: photos[2].borderRadius,
+                border: '4px solid white',
+                overflow: 'hidden',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+              }}
+            >
+              <img src={photos[2].src} alt={photos[2].alt} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </motion.div>
+
+            {/* Bitcoin logo circle — bottom right */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                position: 'absolute', bottom: 10, right: 0,
+                width: 72, height: 72,
+                borderRadius: '50%',
+                background: '#111',
+                border: '3px solid white',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+              }}
+            >
+              <BitcoinMarkWhite size={56} />
+            </motion.div>
+
+          </div>
+        </div>
+
+      </section>
+    </>
   )
 }
 
