@@ -28,18 +28,18 @@ const BitcoinMarkWhite = ({ size = 24 }: { size?: number }) => (
 
 const photos = [
   {
-    src: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80',
-    alt: 'Bitcoin student',
+    src: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=400&h=400&q=80&crop=faces',
+    alt: 'Students studying together',
     borderRadius: '60% 40% 55% 45% / 45% 60% 40% 55%',
   },
   {
-    src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80',
-    alt: 'Bitcoin student',
+    src: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=400&h=400&q=80&crop=faces',
+    alt: 'Student researching',
     borderRadius: '45% 55% 40% 60% / 60% 45% 55% 40%',
   },
   {
-    src: 'https://images.unsplash.com/photo-1531891437562-4301cf35b7e4?auto=format&fit=crop&w=300&h=300&q=80',
-    alt: 'Bitcoin student',
+    src: 'https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?auto=format&fit=crop&w=400&h=400&q=80&crop=faces',
+    alt: 'Student with laptop',
     borderRadius: '55% 45% 60% 40% / 40% 55% 45% 60%',
   },
 ]

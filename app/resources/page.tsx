@@ -3,10 +3,10 @@ import { ExternalLink } from 'lucide-react'
 
 const resources = [
   { category: 'Books', icon: '📚', items: [
-    { title: 'Inventing Bitcoin',       author: 'Yan Pritzker',     desc: 'How Bitcoin works — no coding needed. The best technical intro for non-developers.', url: 'https://www.inventingbitcoin.com',              free: true  },
+    { title: 'Inventing Bitcoin',       author: 'Yan Pritzker',     desc: 'How Bitcoin works — no coding needed. The best technical intro for non-developers.', url: 'https://www.swanbitcoin.com/inventing-bitcoin/',  free: true  },
     { title: 'The Bitcoin Standard',    author: 'Saifedean Ammous', desc: 'Bitcoin economics through monetary history. Essential for understanding why Bitcoin matters.', url: 'https://saifedean.com/the-bitcoin-standard/', free: false },
-    { title: 'Bitcoin Whitepaper',      author: 'Satoshi Nakamoto', desc: 'The original 9-page paper. Every researcher should read it at least once.',          url: 'https://bitcoin.org/bitcoin.pdf',               free: true  },
-    { title: 'The Little Bitcoin Book', author: 'Multiple Authors', desc: 'A simple, accessible introduction to Bitcoin for complete beginners.',               url: 'https://littlebitcoinbook.com',                 free: true  },
+    { title: 'Bitcoin Whitepaper',      author: 'Satoshi Nakamoto', desc: 'The original 9-page paper. Every researcher should read it at least once.',          url: 'https://bitcoin.org/bitcoin.pdf',                free: true  },
+    { title: 'The Little Bitcoin Book', author: 'Multiple Authors', desc: 'A simple, accessible introduction to Bitcoin for complete beginners.',               url: 'https://www.bitcoinerbooks.com/books/the-little-bitcoin-book', free: true  },
   ]},
   { category: 'News & Analysis', icon: '📰', items: [
     { title: 'Bitcoin Magazine', author: 'bitcoinmagazine.com', desc: 'The oldest and most respected Bitcoin publication. News, analysis, and long-form pieces.', url: 'https://bitcoinmagazine.com', free: true  },
